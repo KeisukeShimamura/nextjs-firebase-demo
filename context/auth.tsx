@@ -1,4 +1,5 @@
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { doc, onSnapshot, Unsubscribe } from "firebase/firestore";
 import {
   createContext,
   ReactNode,
@@ -6,26 +7,44 @@ import {
   useEffect,
   useState,
 } from "react";
-import { auth } from "../firebase/client";
+import { auth, db } from "../firebase/client";
+import { User } from "../types/user";
 
 type ContextType = {
-  isLoggedIn: boolean;
+  fbUser: FirebaseUser | null | undefined;
   isLoading: boolean;
+  user: User | null | undefined;
 };
 
 const AuthContext = createContext<ContextType>({
-  isLoggedIn: false,
+  fbUser: undefined,
   isLoading: true,
+  user: undefined,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [fbUser, setFbUser] = useState<FirebaseUser | null>();
+  const [user, setUser] = useState<User | null>();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setIsLoading(false);
-      setIsLoggedIn(!!user);
+    let unsubribe: Unsubscribe;
+
+    onAuthStateChanged(auth, (resultUser) => {
+      unsubribe?.();
+      setFbUser(resultUser);
+
+      if (resultUser) {
+        setIsLoading(true);
+        const ref = doc(db, `users/${resultUser.uid}`);
+        unsubribe = onSnapshot(ref, (snap) => {
+          setUser(snap.data() as User);
+          setIsLoading(false);
+        });
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     });
   }, []);
 
@@ -33,7 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         isLoading,
-        isLoggedIn,
+        fbUser,
+        user,
       }}
     >
       {children}
