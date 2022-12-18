@@ -1,8 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuth } from "../context/auth";
+import UserMenu from "./user-menu";
 
 const Header = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <header>
       <div className="flex items-center h-14 border-b container">
@@ -10,7 +18,7 @@ const Header = () => {
           <Image src="/logo.svg" width={160} height={32} alt="Logoipsum" />
         </Link>
         <span className="flex-1"></span>
-        <span className="bg-slate-300 rounded-full w-9 h-9" />
+        {user ? <UserMenu /> : <Link href="/login">ログイン</Link>}
       </div>
     </header>
   );

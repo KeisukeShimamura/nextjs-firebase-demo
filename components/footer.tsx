@@ -13,7 +13,7 @@ const links = [
   },
   {
     label: "設定",
-    path: "/setting",
+    path: "/settings",
   },
 ];
 
