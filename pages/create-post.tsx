@@ -59,8 +59,8 @@ const CreatePost = () => {
             {...register("title", {
               required: "必須入力です",
               maxLength: {
-                value: 50,
-                message: "最大50文字です",
+                value: 100,
+                message: "最大100文字です",
               },
             })}
             id="title"
@@ -83,8 +83,8 @@ const CreatePost = () => {
             {...register("body", {
               required: "必須入力です",
               maxLength: {
-                value: 255,
-                message: "最大255文字です",
+                value: 400,
+                message: "最大400文字です",
               },
             })}
             id="profile"
