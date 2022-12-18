@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Post } from "../../../types/post";
 import { useUser } from "../../../lib/user";
 import { format } from "date-fns";
@@ -6,6 +6,8 @@ import Link from "next/link";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { adminDB } from "../../../firebase/server";
 import { useAuth } from "../../../context/auth";
+import Layout from "../../../components/layout";
+import { NextPageWithLayout } from "../../_app";
 
 export const getStaticProps: GetStaticProps<{
   post: Post;
@@ -27,9 +29,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const PostDetailPage = ({
-  post,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PostDetailPage: NextPageWithLayout<
+  InferGetStaticPropsType<typeof getStaticProps>
+> = ({ post }) => {
   const user = useUser(post?.authorId);
   const { fbUser } = useAuth();
   const isAuthoer = fbUser?.uid === post?.authorId;
@@ -40,7 +42,6 @@ const PostDetailPage = ({
 
   return (
     <div className="container">
-      <Link href="/search">Search</Link>
       <div className="aspect-video rounded-md bg-slate-200 mb-4"></div>
       <h1 className="font-bold mb-2 text-lg">{post.title}</h1>
       {user && (
@@ -62,6 +63,10 @@ const PostDetailPage = ({
       )}
     </div>
   );
+};
+
+PostDetailPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default PostDetailPage;

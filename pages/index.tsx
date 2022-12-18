@@ -1,9 +1,12 @@
 import Head from "next/head";
 import Image from "next/image";
+import { ReactElement } from "react";
+import Layout from "../components/layout";
 import { useAuth } from "../context/auth";
 import styles from "../styles/Home.module.css";
+import { NextPageWithLayout } from "./_app";
 
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   const { user } = useAuth();
 
   return (
@@ -15,8 +18,15 @@ export default function Home() {
       </Head>
 
       <main>
+        <h1>トップページ</h1>
         <p>{user?.name}</p>
       </main>
     </div>
   );
-}
+};
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
+};
+
+export default Home;

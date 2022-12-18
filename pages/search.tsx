@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
@@ -15,6 +15,8 @@ import { debounce } from "debounce";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useUser } from "../lib/user";
+import { NextPageWithLayout } from "./_app";
+import Layout from "../components/layout";
 
 const searchClient = algoliasearch(
   "H6VRU32IGG",
@@ -56,7 +58,7 @@ const NoResultsBoundary = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const Search = () => {
+const Search: NextPageWithLayout = () => {
   const search: SearchBoxProps["queryHook"] = (query, hook) => {
     hook(query);
   };
@@ -99,6 +101,10 @@ const Search = () => {
       </InstantSearch>
     </div>
   );
+};
+
+Search.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Search;
