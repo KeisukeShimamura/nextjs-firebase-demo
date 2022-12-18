@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
@@ -13,10 +13,8 @@ import { Post } from "../types/post";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { debounce } from "debounce";
 import { format } from "date-fns";
-import { db } from "../firebase/client";
-import { doc, getDoc } from "firebase/firestore";
-import { User } from "../types/user";
-import useSWR from "swr/immutable";
+import Link from "next/link";
+import { useUser } from "../lib/user";
 
 const searchClient = algoliasearch(
   "H6VRU32IGG",
@@ -24,18 +22,13 @@ const searchClient = algoliasearch(
 );
 
 const Hit: HitsProps<Post>["hitComponent"] = ({ hit }) => {
-  const { data: user } = useSWR<User>(
-    hit.authorId && `users/${hit.authorId}`,
-    async () => {
-      const ref = doc(db, `users/${hit.authorId}`);
-      const snap = await getDoc(ref);
-      return snap.data() as User;
-    }
-  );
+  const user = useUser(hit.authorId);
 
   return (
     <div className="rounded-md shadow p-4">
-      <h2 className="line-clamp-2">{hit.title}</h2>
+      <h2 className="line-clamp-2">
+        <Link href={`/posts/${hit.id}`}>{hit.title}</Link>
+      </h2>
       <p className="text-slate-500">
         {format(hit.createdAt, "yyyy年MM月dd日")}
       </p>
