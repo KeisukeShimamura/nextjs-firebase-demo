@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <>
-      <header>
+      <header className="relative z-10">
         <div className="flex items-center h-14 border-b container">
           <button className="p-2 mr-1" onClick={openModal}>
             <Bars3Icon className="w-6 h-6" />
