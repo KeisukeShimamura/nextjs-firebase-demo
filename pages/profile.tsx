@@ -1,14 +1,10 @@
 import { ReactElement } from "react";
 import Layout from "../components/layout";
+import UserForm from "../components/user-form";
 import { NextPageWithLayout } from "./_app";
 
 const Profile: NextPageWithLayout = () => {
-  return (
-    <div>
-      <h1>プロフィール画面</h1>
-      <p>ああああ</p>
-    </div>
-  );
+  return <UserForm isEditMode />;
 };
 
 Profile.getLayout = function getLayout(page: ReactElement) {
