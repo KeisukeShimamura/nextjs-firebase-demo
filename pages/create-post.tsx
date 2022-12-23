@@ -4,7 +4,11 @@ import PostForm from "../components/post-form";
 import { NextPageWithLayout } from "./_app";
 
 const CreatePost: NextPageWithLayout = () => {
-  return <PostForm isEditMode={false} />;
+  return (
+    <div className="container mt-6">
+      <PostForm isEditMode={false} />
+    </div>
+  );
 };
 
 CreatePost.getLayout = function getLayout(page: ReactElement) {

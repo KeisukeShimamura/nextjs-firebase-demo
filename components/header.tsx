@@ -33,6 +33,11 @@ const Header = () => {
             <Image src="/logo.svg" width={160} height={32} alt="Logoipsum" />
           </Link>
           <span className="flex-1"></span>
+          {user && (
+            <Link href="/create-post" className="mr-4">
+              投稿
+            </Link>
+          )}
           {user ? <UserMenu /> : <Link href="/login">ログイン</Link>}
         </div>
       </header>

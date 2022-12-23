@@ -17,38 +17,12 @@ import Link from "next/link";
 import { useUser } from "../lib/user";
 import { NextPageWithLayout } from "./_app";
 import Layout from "../components/layout";
+import PostItemCard from "../components/post-item-card";
 
 const searchClient = algoliasearch(
   "H6VRU32IGG",
   "94491a1411a8551a6fee0ac8fb50ad7d"
 );
-
-const Hit: HitsProps<Post>["hitComponent"] = ({ hit }) => {
-  const user = useUser(hit.authorId);
-
-  return (
-    <div className="rounded-md shadow p-4">
-      <h2 className="line-clamp-2">
-        <Link href={`/posts/${hit.id}`}>{hit.title}</Link>
-      </h2>
-      {user && (
-        <div className="flex items-center">
-          <img
-            src={user?.avatarURL}
-            alt=""
-            className="w-10 h-10 block rounded-full mr-2"
-          />
-          <div>
-            <p className="truncate">{user.name}</p>
-            <p className="text-slate-500 text-sm">
-              {format(hit.createdAt, "yyyy年MM月dd日")}
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const NoResultsBoundary = ({ children }: { children: ReactNode }) => {
   const { results } = useInstantSearch();
@@ -98,7 +72,7 @@ const Search: NextPageWithLayout = () => {
             classNames={{
               list: "space-y-4 my-6",
             }}
-            hitComponent={Hit}
+            hitComponent={({ hit }) => <PostItemCard post={hit} />}
           />
           <Pagination
             classNames={{
